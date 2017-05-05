@@ -6,12 +6,15 @@
 <body>
 
 <div>
-    <span>
-        <%= statusCode %>
-    </span>
-    <span>
-        <%= statusCode %>
-    </span>
+    <div>
+        <%= content.message %>
+    </div>
+    <div>
+        <%= content.additional %>
+    </div>
+    <div>
+        <a href="/">Check another site?</a>
+    </div>
 </div>
 
 <%- include('../partials/scripts') %>

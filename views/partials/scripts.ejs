@@ -1,7 +1,7 @@
 <script>
     function formSubmit() {
         var domain = document.getElementById('domain').value;
-        window.location = '/' + domain;
+        window.location = '/' + domain.split('/')[0];
         return false;
     }
 </script>
