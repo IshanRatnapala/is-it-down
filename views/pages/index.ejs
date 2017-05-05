@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head', { title: pageTitle }) %>
+</head>
+<body>
+
+<div>
+    <form onsubmit="return formSubmit()" method="get">
+        <span>Is</span>
+        <input id="domain" type="text" placeholder="google.com" value="google.com">
+        <span>down?</span>
+        <input type="submit">
+    </form>
+</div>
+
+<%- include('../partials/scripts') %>
+</body>
+</html>
