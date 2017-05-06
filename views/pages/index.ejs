@@ -4,19 +4,28 @@
     <%- include('../partials/head', { title: pageTitle }) %>
 </head>
 <body>
+<header>
+    <h1>Is it down?</h1>
+</header>
 
-<div>
+<div class="content">
     <form onsubmit="return formSubmit()" method="get">
-        <span>Is</span>
-        <input id="domain" type="text" placeholder="google.com" value="google.com">
-        <span>down?</span>
-        <input type="submit">
+        <span class="opaque">Is</span>
+        <div class="input">
+            <input id="domain" type="text" placeholder="google.com" autofocus autocomplete="off" />
+            <span class="bar"></span>
+        </div>
+        <span class="opaque">down?</span>
+        <input type="submit" class="hide">
     </form>
-</div>
-<div id="loading-spinner">
-    Checking...
+
+    <div id="loading-spinner">
+        Checking...
+    </div>
 </div>
 
+
+<%- include('../partials/footer') %>
 <%- include('../partials/scripts') %>
 </body>
 </html>

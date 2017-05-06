@@ -6,17 +6,25 @@
 <body>
 
 <div>
-    <div>
-        <%= content.message %>
-    </div>
-    <div>
-        <%= content.additional %>
-    </div>
-    <div>
-        <a href="/">Check another site?</a>
+    <header>
+        <h1>Is it down?</h1>
+    </header>
+
+    <div class="content">
+        <div class="<%= content.errorType %>">
+            <span class="circle">●</span>
+            <%= site %> <%= content.message %>
+        </div>
+        <div class="additional-info">
+            <%= content.additional %>
+        </div>
+        <div class="go-again">
+            <a href="/">Check another site?</a>
+        </div>
     </div>
 </div>
 
+<%- include('../partials/footer') %>
 <%- include('../partials/scripts') %>
 </body>
 </html>
