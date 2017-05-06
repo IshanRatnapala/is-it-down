@@ -16,11 +16,13 @@ module.exports = (app) => {
     });
 
     app.get('/:site', (req, res) => {
+        let URI = req.params.site;
         doRequest(req.params.site)
             .on('response', function(response) {
                 console.log('statusCode:', response && response.statusCode);
                 res.render('pages/detail-page.ejs', {
                     pageTitle: 'Is it down?',
+                    site: URI,
                     content: parseStatusCode(response.statusCode, response.headers)
                 });
             })
@@ -28,6 +30,7 @@ module.exports = (app) => {
                 console.log('error:', error);
                 res.render('pages/detail-page.ejs', {
                     pageTitle: 'Is it down?',
+                    site: URI,
                     content: parseStatusCode(error.code, error)
                 });
             })
