@@ -1,6 +1,4 @@
-const request = require('request');
-
-function parseStatusCode (statusCode, details) {
+module.exports = function (statusCode, details) {
     const code = statusCode.toString();
     if (code[0] === '2') {
         return {
@@ -26,7 +24,6 @@ function parseStatusCode (statusCode, details) {
             additional: 'Server responded with a status code of ' +  code + ' which means there are server errors.'
         };
     }
-
     /* Errors */
     if (code === 'ENOTFOUND') {
         return {
@@ -40,44 +37,9 @@ function parseStatusCode (statusCode, details) {
             additional: 'No response from the server for 20 seconds.'
         };
     }
-
     /* Default */
     return {
         message: statusCode,
         additional: ''
     };
-}
-
-module.exports = (app) => {
-    app.get('/', (req, res) => {
-        res.render('pages/index.ejs', {
-            pageTitle: 'Is it down?'
-        });
-    });
-    app.get('/:site', (req, res) => {
-        doRequest(req.params.site, res);
-    });
 };
-
-function doRequest (site, res) {
-    if (site.indexOf('://') < 0) {
-        site = 'http://' + site;
-    }
-
-    request.head(site, {timeout: 20000}, function (error, response) {
-        console.log('error:', error);
-        console.log('statusCode:', response && response.statusCode);
-
-        if (error) {
-            res.render('pages/detail-page.ejs', {
-                pageTitle: 'Is it down?',
-                content: parseStatusCode(error.code, error)
-            });
-        } else {
-            res.render('pages/detail-page.ejs', {
-                pageTitle: 'Is it down?',
-                content: parseStatusCode(response.statusCode, response.headers)
-            });
-        }
-    });
-}

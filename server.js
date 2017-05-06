@@ -8,8 +8,8 @@ app.set('view-engine', 'ejs');
 app.use(favicon(path.join(__dirname, 'public/favicon', 'favicon.ico')));
 app.use(express.static(path.join(__dirname, 'public'), { maxage: '5d' }));
 
-require('./routes/main-routes')(app);
-require('./routes/error')(app);
+require('./components/main-routes')(app);
+require('./components/error-routes')(app);
 
 app.listen(PORT, () => {
     console.log('Server started on port', PORT);
