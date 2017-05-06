@@ -2,6 +2,7 @@
     function formSubmit() {
         var domain = document.getElementById('domain').value;
         window.location = '/' + domain.split('/')[0];
+        document.getElementById('loading-spinner').style.display = 'block';
         return false;
     }
 </script>
