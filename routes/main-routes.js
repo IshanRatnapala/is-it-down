@@ -1,7 +1,6 @@
-// const http = require('http');
 const request = require('request');
 
-function parseStatusCode (statusCode) {
+function parseStatusCode (statusCode, details) {
     const code = statusCode.toString();
     if (code[0] === '2') {
         return {
@@ -38,7 +37,7 @@ function parseStatusCode (statusCode) {
     if (code === 'ETIMEDOUT') {
         return {
             message: 'Connection Timeout',
-            additional: 'No response from the server for 15 seconds.'
+            additional: 'No response from the server for 20 seconds.'
         };
     }
 
@@ -56,88 +55,29 @@ module.exports = (app) => {
         });
     });
     app.get('/:site', (req, res) => {
-        console.log(req.params.site);
         doRequest(req.params.site, res);
     });
 };
 
-function configOptions (site) {
-    let URI = site;
-
-    let options = {
-        method: 'HEAD',
-        port: 80,
-        path: '/'
-    };
-
-    if (URI.indexOf('://') >= 0) {
-        options.protocol = URI.split('://')[0] + ':';
-        URI = URI.split('://')[1];
-    }
-
-    let host = URI.split('/')[0];
-    options.host = host;
-    URI = host;
-
-    let port = URI.split(':')[1];
-    if (port) {
-        options.port = port;
-    }
-
-    return options;
-}
-
 function doRequest (site, res) {
-    const options = configOptions(site);
-    // const options = configOptions('https://www.monoprice.com/asdasd')''
+    if (site.indexOf('://') < 0) {
+        site = 'http://' + site;
+    }
 
-    http.request(options, function (response) {
-        console.log(response.headers);
+    request.head(site, {timeout: 20000}, function (error, response) {
+        console.log('error:', error);
+        console.log('statusCode:', response && response.statusCode);
 
-        if (response.statusCode.toString()[0] === '3') {
-            console.log(response.headers.location);
-            doRequest(response.headers.location, res);
+        if (error) {
+            res.render('pages/detail-page.ejs', {
+                pageTitle: 'Is it down?',
+                content: parseStatusCode(error.code, error)
+            });
         } else {
             res.render('pages/detail-page.ejs', {
                 pageTitle: 'Is it down?',
                 content: parseStatusCode(response.statusCode, response.headers)
             });
         }
-    })
-        .on('error', function (err) {
-            res.render('pages/detail-page.ejs', {
-                pageTitle: 'Is it down?',
-                content: parseStatusCode(err.code, err)
-            });
-        })
-        .end();
+    });
 }
-//
-// function doRequest (site, res) {
-//     if (site.indexOf('://') < 0) {
-//         site = 'http://' + site;
-//     }
-//
-//     request(site, {timeout: 15000}, function (error, response, body) {
-//         console.log('error:', error); // Print the error if one occurred
-//         console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-//         // console.log('body:', body); // Print the HTML for the Google homepage.
-//
-//         if (error) {
-//             res.render('pages/detail-page.ejs', {
-//                 pageTitle: 'Is it down?',
-//                 content: parseStatusCode(error.code, error)
-//             });
-//         }
-//
-//         if (response.statusCode.toString()[0] === '3') {
-//             console.log(response.headers.location);
-//             doRequest(response.headers.location, res);
-//         } else {
-//             res.render('pages/detail-page.ejs', {
-//                 pageTitle: 'Is it down?',
-//                 content: parseStatusCode(response.statusCode, response.headers)
-//             });
-//         }
-//     });
-// }
