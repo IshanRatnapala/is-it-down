@@ -14,11 +14,25 @@
 
     <div class="content">
         <div class="<%= content.errorType %>">
-            <span class="circle">●</span>
-            <%= site %> <%= content.message %>
+            <div class="circle">
+                ●
+                <span class="response">
+                <% if (elapsedTime !== '') { %>
+                    Server Response Time: <span class="bold"><%= elapsedTime %></span> ms
+                <% } else { %>
+                    No response
+                <% } %>
+                </span>
+
+            </div>
+            <div class="message">
+                <%= site %> <%= content.message %>
+            </div>
         </div>
         <div class="additional-info">
-            <%= content.additional %>
+            <% if (content.code !== '') { %>
+            Server responded with a status code of <span class="bold"><%= content.code %></span> <%= content.additional %> <span class="red"><%= content.redText %></span>
+            <% } %>
         </div>
         <div class="go-again">
             <a href="/">Check another site?</a>

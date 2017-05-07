@@ -11,7 +11,7 @@ function formSubmit() {
 
 WebFontConfig = {
     google: {
-        families: ['Open Sans']
+        families: ['Open Sans:400,700']
     }
 };
 
