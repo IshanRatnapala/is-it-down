@@ -17,6 +17,7 @@ module.exports = (app) => {
 
     app.get('/:site', (req, res) => {
         let URI = req.params.site;
+        console.log(URI);
         doRequest(req.params.site)
             .on('response', function(response) {
                 console.log('statusCode:', response && response.statusCode);
