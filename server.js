@@ -9,7 +9,7 @@ require('./components/production')(app);
 
 app.set('view-engine', 'ejs');
 app.use(favicon(path.join(__dirname, 'public/favicon', 'favicon.ico')));
-app.use(express.static(path.join(__dirname, 'public'), { maxage: '5d' }));
+app.use(express.static(path.join(__dirname, 'public'), { maxage: '90d' }));
 
 require('./components/main-routes')(app);
 require('./components/error-routes')(app);
