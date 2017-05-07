@@ -85,7 +85,7 @@ a:hover, a:focus {
 
 /* INPUT CONTAINER */
 .input {
-    width: 300px;
+    width: 400px;
     display: inline-block;
     margin: 0px 10px;
 }
@@ -101,7 +101,19 @@ input {
     font-size: 1em;
     color: #ffffff;
 }
-input:focus { outline: none; }
+input:focus {
+    outline: none;
+}
+/* Input for mobile*/
+@media (max-width:767px) {
+    .input {
+        width: 90%;
+    }
+    form > span {
+        margin: 10px 0;
+        display: block;
+    }
+}
 .bar {
     position: relative;
     display: block;
