@@ -1,5 +1,7 @@
 const request = require('request');
+const sm = require('sitemap');
 const parseStatusCode = require('./parse-statuscodes');
+const DB_ACTIONS = require('../db');
 const USERAGENT = 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36';
 
 module.exports = (app) => {
@@ -9,13 +11,36 @@ module.exports = (app) => {
         });
     });
 
-    app.get('/:site', (req, res) => {
-        let URI = req.params.site;
-        console.log(URI);
+    app.get('/sitemap.xml', function(req, res) {
+        let sitemap = sm.createSitemap({
+            hostname: 'https://isitdown.info',
+            urls: [{
+                url: '/',
+                changefreq: 'monthly',
+                priority: 1
+            }]
+        });
 
-        if (URI.indexOf('://') < 0) {
-            URI = 'http://' + URI;
-        }
+        DB_ACTIONS.getSites()
+            .then((data) => {
+                for (var i = 0; i < data.length; i++) {
+                    sitemap.add({
+                        url: data[i].siteUrl,
+                        changefreq: 'daily',
+                        priority: 0.9
+                    });
+                }
+                res.header('Content-Type', 'application/xml');
+                res.send(sitemap.toString());
+            })
+            .catch((err) => {
+                res.send(err);
+            });
+    });
+
+    app.get('/:site', (req, res) => {
+        let URI = 'http://' + req.params.site;
+        console.log(URI);
 
         request({
             method: 'HEAD',
@@ -30,6 +55,7 @@ module.exports = (app) => {
         }, function (error, response) {
             if (error) {
                 console.log('error:', error);
+
                 res.render('pages/detail-page.ejs', {
                     pageTitle: 'Is it down?',
                     site: URI,
@@ -39,9 +65,12 @@ module.exports = (app) => {
             } else {
                 console.log('statusCode:', response && response.statusCode);
 
+                /* Valid url? save to the db for the sitemap without protocol */
+                DB_ACTIONS.insertSite(req.params.site);
+
                 res.render('pages/detail-page.ejs', {
                     pageTitle: 'Is it down?',
-                    site: URI,
+                    site: req.params.site,
                     content: parseStatusCode(response.statusCode, response.headers),
                     elapsedTime: (response.timings.response/1000).toFixed(2)
                 });
