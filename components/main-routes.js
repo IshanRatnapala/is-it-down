@@ -57,19 +57,20 @@ module.exports = (app) => {
                 console.log('error:', error);
 
                 res.render('pages/detail-page.ejs', {
-                    pageTitle: 'Is it down?',
+                    pageTitle: 'Is ' + req.params.site + ' down?',
                     site: URI,
                     content: parseStatusCode(error.code, error),
                     elapsedTime: ''
                 });
             } else {
                 console.log('statusCode:', response && response.statusCode);
+                console.log('site:', req.params.site);
 
                 /* Valid url? save to the db for the sitemap without protocol */
                 DB_ACTIONS.insertSite(req.params.site);
 
                 res.render('pages/detail-page.ejs', {
-                    pageTitle: 'Is it down?',
+                    pageTitle: 'Is ' + req.params.site + ' down?',
                     site: req.params.site,
                     content: parseStatusCode(response.statusCode, response.headers),
                     elapsedTime: (response.timings.response/1000).toFixed(2)

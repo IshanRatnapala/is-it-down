@@ -32,7 +32,9 @@
         <div class="additional-info">
             <% if (content.code !== '') { %>
             Server responded with a status code of <span class="bold"><%= content.code %></span> <%= content.additional %> <span class="red"><%= content.redText %></span>
-            <% } %>
+            <% } else { %>
+            <%= content.additional %>
+            <%} %>
         </div>
         <div class="go-again">
             <a href="/">Check another site?</a>

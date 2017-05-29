@@ -37,6 +37,12 @@ module.exports = function (statusCode, details) {
         status.additional = 'No response from the server for 20 seconds.';
         status.errorType = 'error';
     }
+    if (status.code === 'ECONNRESET') {
+        status.code = '';
+        status.message = ' - Connection Error';
+        status.additional = 'The other side of the TCP conversation abruptly closed its end of the connection. This is most probably due to one or more application protocol errors. ';
+        status.errorType = 'error';
+    }
 
     return status;
 };
