@@ -13,7 +13,7 @@ module.exports = (app) => {
 
     app.get('/sitemap.xml', function(req, res) {
         let sitemap = sm.createSitemap({
-            hostname: 'https://isitdown.info',
+            hostname: 'https://isitdown.today',
             urls: [{
                 url: '/',
                 changefreq: 'monthly',
